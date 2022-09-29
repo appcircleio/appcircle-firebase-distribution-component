@@ -18,7 +18,7 @@ end
 def install_firebase(path)
   version = get_env_variable('AC_FIREBASE_VERSION').nil? ? 'latest' : ENV['AC_FIREBASE_VERSION']
   os = OS.mac? ? 'macos' : 'linux'
-  run_command("mkdir -p #{path}")
+  FileUtils.mkdir_p(path) unless File.directory?(path)
   run_command("curl -L https://firebase.tools/bin/#{os}/#{version} -o #{path}/firebase")
   run_command("chmod +rx #{path}/firebase")
 end
@@ -33,7 +33,9 @@ raise 'App id is empty' if app_id.nil?
 token = get_env_variable('AC_FIREBASE_TOKEN')
 raise 'Firebase token is empty' if token.nil?
 
-firebase_path = '$HOME/firebasetools'
+ac_temp = get_env_variable('AC_TEMP_DIR') || abort('Missing AC_TEMP_DIR variable.')
+firebase_path = File.join(ac_temp, 'firebasetools')
+
 install_firebase(firebase_path)
 
 release_notes = get_env_variable('AC_FIREBASE_RELEASE_NOTES')
