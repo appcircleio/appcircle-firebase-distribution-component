@@ -33,7 +33,11 @@ app_id = get_env_variable('AC_FIREBASE_APP_ID')
 raise 'App id is empty' if app_id.nil?
 
 token = get_env_variable('AC_FIREBASE_TOKEN')
-raise 'Firebase token is empty' if token.nil?
+service_account = get_env_variable('GOOGLE_APPLICATION_CREDENTIALS')
+
+raise 'No token or service account provided.' if token.nil? && service_account.nil?
+
+raise 'Either use token or service account, not both.' if !token.nil? && !service_account.nil?
 
 ac_temp = get_env_variable('AC_TEMP_DIR') || abort('Missing AC_TEMP_DIR variable.')
 firebase_path = File.join(ac_temp, 'firebasetools')
@@ -46,7 +50,8 @@ release_notes_path = get_env_variable('AC_FIREBASE_RELEASE_NOTES_PATH')
 groups = get_env_variable('AC_FIREBASE_GROUPS')
 extra_parameters = get_env_variable('AC_FIREBASE_EXTRA_PARAMETERS')
 
-cmd = "#{firebase_path}/firebase appdistribution:distribute \"#{app_path}\" --app \"#{app_id}\" --token \"#{token}\""
+cmd = "#{firebase_path}/firebase appdistribution:distribute \"#{app_path}\" --app \"#{app_id}\""
+cmd += " --token \"#{token}\"" unless token.nil?
 cmd += " --groups \"#{groups}\"" unless groups.nil?
 if release_notes.nil?
   cmd += " --release-notes-file \"#{release_notes_path}\"" unless release_notes_path.nil?

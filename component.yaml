@@ -23,9 +23,15 @@ inputs:
   helpText:
 - key: "AC_FIREBASE_TOKEN"
   defaultValue: "$AC_FIREBASE_TOKEN"
-  isRequired: true
+  isRequired: false
   title: Firebase Token
-  description: A refresh token that's printed when you authenticate with firebase login:ci command.
+  description: "A refresh token that's printed when you authenticate with `firebase login:ci` command. **Either select Firebase token or Google Service account**."
+  helpText:
+- key: "GOOGLE_APPLICATION_CREDENTIALS"
+  defaultValue: "$GOOGLE_APPLICATION_CREDENTIALS"
+  isRequired: false
+  title: Google Service Account
+  description: "Path of Google Service Account JSON. Upload service account as a file to your environment group and name it `GOOGLE_APPLICATION_CREDENTIALS`. **Either select Firebase token or Google Service account**."
   helpText:
 - key: "AC_FIREBASE_RELEASE_NOTES"
   defaultValue: "$AC_FIREBASE_RELEASE_NOTES"
